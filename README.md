@@ -83,6 +83,12 @@ Manage scheduled checks without Codex:
 ./.venv/bin/xray-mcp-monitor-cli --help
 ```
 
+Run the web dashboard:
+
+```bash
+./.venv/bin/xray-mcp-monitor-web --help
+```
+
 ## Environment Variables
 
 ```bash
@@ -135,6 +141,38 @@ You can also use:
 
 The scheduler state is persisted in `XRAY_MCP_STATE_FILE`, so the daemon reloads existing watches on startup.
 
+## Web Dashboard
+
+The project now includes a built-in local dashboard for creating and managing monitors in a browser.
+
+Start it locally:
+
+```bash
+XRAY_MCP_STATE_FILE=/root/xray-mcp/.codex/xray_watch_state.json \
+./.venv/bin/xray-mcp-monitor-web --host 127.0.0.1 --port 8080
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8080
+```
+
+The dashboard supports:
+
+- creating scheduled monitors
+- running one-off checks
+- listing current monitor health
+- enabling or disabling monitors
+- running a monitor immediately
+- removing monitors
+
+If you prefer the module form:
+
+```bash
+./.venv/bin/python -m xray_mcp_monitor web --host 127.0.0.1 --port 8080
+```
+
 ## systemd Service
 
 This repository includes a sample unit at [deploy/systemd/xray-mcp-monitor.service](/root/xray-mcp/deploy/systemd/xray-mcp-monitor.service).
@@ -160,6 +198,27 @@ journalctl -u xray-mcp-monitor -f
 ```
 
 Before enabling the service, edit the unit file paths if your checkout is not under `/opt/xray-mcp`.
+
+## systemd Web Service
+
+A separate sample unit is included at [deploy/systemd/xray-mcp-monitor-web.service](/root/xray-mcp/deploy/systemd/xray-mcp-monitor-web.service).
+
+Install it with:
+
+```bash
+sudo cp deploy/systemd/xray-mcp-monitor-web.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now xray-mcp-monitor-web
+```
+
+Check logs with:
+
+```bash
+sudo systemctl status xray-mcp-monitor-web
+journalctl -u xray-mcp-monitor-web -f
+```
+
+If you expose it beyond localhost, put it behind a reverse proxy or a firewall. The current dashboard does not include authentication.
 
 ## MCP Tools
 

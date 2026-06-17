@@ -15,6 +15,10 @@ dependencies = [
 [project.scripts]
 xray-mcp-monitor = "xray_mcp_monitor.server:main"
 xray-mcp-monitor-cli = "xray_mcp_monitor.cli:main"
+xray-mcp-monitor-web = "xray_mcp_monitor.webapp:main"
 
 [tool.setuptools.packages.find]
 include = ["xray_mcp_monitor*"]
+
+[tool.setuptools.package-data]
+xray_mcp_monitor = ["web/*.html", "web/*.css", "web/*.js"]

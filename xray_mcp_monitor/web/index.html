@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Xray Monitor Console</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Xray MCP Monitor</p>
+          <h1>Subscription Health Console</h1>
+          <p class="lede">
+            Register subscriptions, inspect node reachability, and keep the scheduler running from a single local dashboard.
+          </p>
+        </div>
+        <div class="hero-stats" id="summary-cards"></div>
+      </header>
+
+      <main class="layout">
+        <section class="panel panel-form">
+          <div class="panel-header">
+            <h2>Create Monitor</h2>
+            <p>Saved watches run on schedule and survive restarts through the shared state file.</p>
+          </div>
+          <form id="create-form" class="form-grid">
+            <label>
+              <span>Subscription URL</span>
+              <input name="subscription_url" type="url" required placeholder="https://example.com/subscription" />
+            </label>
+            <label>
+              <span>Interval Seconds</span>
+              <input name="interval_seconds" type="number" min="10" value="300" required />
+            </label>
+            <label>
+              <span>Timeout Seconds</span>
+              <input name="timeout_seconds" type="number" min="1" step="0.5" value="5" required />
+            </label>
+            <label>
+              <span>Node Filter</span>
+              <input name="node_name_keyword" type="text" placeholder="hk" />
+            </label>
+            <button type="submit" class="button button-primary">Create Monitor</button>
+          </form>
+        </section>
+
+        <section class="panel panel-form">
+          <div class="panel-header">
+            <h2>Quick Check</h2>
+            <p>Run an ad-hoc probe without persisting a watch.</p>
+          </div>
+          <form id="quick-check-form" class="form-grid">
+            <label>
+              <span>Subscription URL</span>
+              <input name="subscription_url" type="url" required placeholder="https://example.com/subscription" />
+            </label>
+            <label>
+              <span>Timeout Seconds</span>
+              <input name="timeout_seconds" type="number" min="1" step="0.5" value="5" required />
+            </label>
+            <label>
+              <span>Node Filter</span>
+              <input name="node_name_keyword" type="text" placeholder="sg" />
+            </label>
+            <button type="submit" class="button button-secondary">Run Quick Check</button>
+          </form>
+          <div id="quick-check-output" class="quick-output empty-state">
+            <p>Quick check results will appear here.</p>
+          </div>
+        </section>
+
+        <section class="panel panel-list">
+          <div class="panel-header panel-header-inline">
+            <div>
+              <h2>Saved Monitors</h2>
+              <p>Auto-refreshes every 15 seconds.</p>
+            </div>
+            <button id="refresh-button" class="button button-ghost" type="button">Refresh</button>
+          </div>
+          <div id="watch-list" class="watch-list empty-state">
+            <p>No monitors yet. Create one above to start tracking reachability.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="watch-card-template">
+      <article class="watch-card">
+        <div class="watch-card-top">
+          <div>
+            <p class="watch-status-line"></p>
+            <h3 class="watch-title"></h3>
+          </div>
+          <span class="watch-pill"></span>
+        </div>
+        <dl class="watch-meta"></dl>
+        <div class="watch-actions"></div>
+        <div class="watch-detail"></div>
+      </article>
+    </template>
+
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

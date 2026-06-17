@@ -1,0 +1,19 @@
+[Unit]
+Description=Xray subscription monitor web console
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Update these paths and bind address for your deployment.
+WorkingDirectory=/opt/xray-mcp
+Environment=PYTHONUNBUFFERED=1
+Environment=XRAY_MCP_STATE_FILE=/var/lib/xray-mcp-monitor/state.json
+Environment=XRAY_MCP_WEB_HOST=0.0.0.0
+Environment=XRAY_MCP_WEB_PORT=8080
+ExecStart=/opt/xray-mcp/.venv/bin/python -m xray_mcp_monitor.webapp
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
