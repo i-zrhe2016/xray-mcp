@@ -14,6 +14,7 @@ dependencies = [
 
 [project.scripts]
 xray-mcp-monitor = "xray_mcp_monitor.server:main"
+xray-mcp-monitor-cli = "xray_mcp_monitor.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["xray_mcp_monitor*"]

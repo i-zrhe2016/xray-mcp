@@ -1,0 +1,17 @@
+[Unit]
+Description=Xray subscription monitor scheduler
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Update these paths for your checkout.
+WorkingDirectory=/opt/xray-mcp
+Environment=PYTHONUNBUFFERED=1
+Environment=XRAY_MCP_STATE_FILE=/var/lib/xray-mcp-monitor/state.json
+ExecStart=/opt/xray-mcp/.venv/bin/python -m xray_mcp_monitor.cli daemon
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

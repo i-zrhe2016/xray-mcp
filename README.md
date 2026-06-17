@@ -77,6 +77,12 @@ You can also use the installed console script:
 ./.venv/bin/xray-mcp-monitor
 ```
 
+Manage scheduled checks without Codex:
+
+```bash
+./.venv/bin/xray-mcp-monitor-cli --help
+```
+
 ## Environment Variables
 
 ```bash
@@ -90,6 +96,70 @@ export XRAY_MCP_STATE_FILE=./xray_watch_state.json
 - `XRAY_MCP_HOST`: bind host for network transports
 - `XRAY_MCP_PORT`: bind port for network transports
 - `XRAY_MCP_STATE_FILE`: path to the persistent watch state JSON file
+
+## Run Without Codex
+
+If you want the scheduler to keep running without an interactive Codex session, use the bundled CLI manager instead of the MCP transport.
+
+Register a scheduled watch:
+
+```bash
+./.venv/bin/xray-mcp-monitor-cli \
+  --state-file /root/xray-mcp/.codex/xray_watch_state.json \
+  register "https://example.com/subscription" \
+  --interval-seconds 300 \
+  --timeout-seconds 5 \
+  --node-name-keyword hk
+```
+
+List stored watches:
+
+```bash
+./.venv/bin/xray-mcp-monitor-cli \
+  --state-file /root/xray-mcp/.codex/xray_watch_state.json \
+  list
+```
+
+Run the background scheduler as a long-lived process:
+
+```bash
+XRAY_MCP_STATE_FILE=/root/xray-mcp/.codex/xray_watch_state.json \
+./.venv/bin/python -m xray_mcp_monitor.cli daemon
+```
+
+You can also use:
+
+```bash
+./.venv/bin/python -m xray_mcp_monitor cli list
+```
+
+The scheduler state is persisted in `XRAY_MCP_STATE_FILE`, so the daemon reloads existing watches on startup.
+
+## systemd Service
+
+This repository includes a sample unit at [deploy/systemd/xray-mcp-monitor.service](/root/xray-mcp/deploy/systemd/xray-mcp-monitor.service).
+
+Recommended install flow:
+
+```bash
+sudo mkdir -p /opt/xray-mcp /var/lib/xray-mcp-monitor
+sudo cp -r /root/xray-mcp /opt/xray-mcp
+cd /opt/xray-mcp
+python3 -m venv .venv
+./.venv/bin/pip install -e .
+sudo cp deploy/systemd/xray-mcp-monitor.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now xray-mcp-monitor
+```
+
+After that:
+
+```bash
+sudo systemctl status xray-mcp-monitor
+journalctl -u xray-mcp-monitor -f
+```
+
+Before enabling the service, edit the unit file paths if your checkout is not under `/opt/xray-mcp`.
 
 ## MCP Tools
 
