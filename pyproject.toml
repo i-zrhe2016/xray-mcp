@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xray-mcp-monitor"
+version = "0.1.0"
+description = "MCP server for scheduled Xray subscription connectivity checks"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "mcp[cli]>=1.27,<2",
+]
+
+[project.scripts]
+xray-mcp-monitor = "xray_mcp_monitor.server:main"
+
+[tool.setuptools.packages.find]
+include = ["xray_mcp_monitor*"]

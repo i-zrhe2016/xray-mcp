@@ -1,0 +1,12 @@
+# Project-scoped Codex MCP config for the local Xray monitor server.
+
+[mcp_servers.xray_monitor]
+command = "/root/xray-mcp/.venv/bin/python"
+args = ["-m", "xray_mcp_monitor.server"]
+cwd = "/root/xray-mcp"
+startup_timeout_sec = 15
+tool_timeout_sec = 120
+enabled = true
+
+[mcp_servers.xray_monitor.env]
+XRAY_MCP_STATE_FILE = "/root/xray-mcp/.codex/xray_watch_state.json"
